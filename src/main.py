@@ -1,6 +1,7 @@
 import os
 from windows.builder import build as wbuild
 from linux.build import build as lbuild
+import sys
 
 
 def make(src: str, out: str) -> int:
@@ -12,8 +13,5 @@ def make(src: str, out: str) -> int:
         lbuild(src, out)
 
 def main():
-    make(input("src: "), input("out: "))
-    return 0
-
-if __name__ == "__main__":
-    main()
+    args = str(sys.argv)
+    make(args[1], args[2])
