@@ -4,8 +4,8 @@ import os
 import sys
 
 def locate_devconsole():
-    path = os.path.dirname(os.path.realpath(__file__))
-    output = subprocess.check_output([f"{path}\\vswhere.exe", "-latest", "-format", "json"])
+    path = os.path.dirname(os.path.abspath(__file__))
+    output = subprocess.check_output(f"{path}\\vswhere.exe -products * -format json", shell=True)
     vswhere_output = json.loads(output)
     path = vswhere_output[0]["installationPath"]
 

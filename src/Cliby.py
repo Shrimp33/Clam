@@ -1,17 +1,18 @@
 import os
-from windows.builder import build as wbuild
-from linux.build import build as lbuild
+from windows.builder import makelib as wlib
+from linux.build import makelib as llib
 import sys
 
 
 def make(src: str, out: str) -> int:
     # If windows, use windows\build.py
     if os.name == "nt":
-        wbuild(src, out)
+        wlib(src, out)
     # If linux, use linux\build.py 
     else:
-        lbuild(src, out)
+        llib(src, out)
 
 def main():
-    args = str(sys.argv)
+    args = sys.argv
+    print(f"makeing {args[1]} to {args[2]}")
     make(args[1], args[2])

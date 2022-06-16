@@ -1,2 +1,5 @@
 *.pyc
 tests/build/*
+dist/*
+Cliby.egg-info/*
+src/Cliby.egg-info/*
