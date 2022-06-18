@@ -2,7 +2,7 @@
 readme = "README.md"
 name = "Cliby"
 description = "Simplify C libaries in python"
-version = "0.9.0"
+version = "0.9.0-hotfix"
 license = { file = "LICENSE" }
 authors = [{name = "Jun Ru Chen", email = "junru.chen.2007@gmail.com"}]
 keywords = ["C"]

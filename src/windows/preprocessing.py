@@ -19,7 +19,7 @@ def findfunctions(src: str) -> list[cfuncition]:
     with open(src, 'r') as f:
         for line in f.readlines():
             # If a letter is followed by a ( then another letter, then it is a function
-            if re.search(r'[a-zA-Z]\([a-zA-Z]', line):
+            if re.search(r'[a-zA-Z][^ ]\([a-zA-Z]', line) and not ("if" in line or "else" in line or "while" in line) and not line.endswith(';'):
                 declaration = line.split('{')[0]
                 # Get return type
                 return_type = declaration.split(' ')[0]
@@ -42,15 +42,29 @@ def prepend_includes(src: str, includes: list[str]) -> int:
     :param includes: list of includes
     :return: C source code with includes prepended
     """
+    functions = findfunctions(src)
     # Open source code
     with open(src, 'r') as f:
         lines = f.readlines()
+    # Write source code
+    with open(src.split('.')[-2] + "_.c", 'w') as f:
+        for line in lines:
+            if re.search(r'[a-zA-Z][^ ]\([a-zA-Z]', line) and not ("if" in line or "else" in line or "while" in line) and not line.endswith(';'):
+                line = "DllExport " + line
+                f.write(line)
+            else:
+                f.write(line)
     # Prepend includes
+    with open(src.split('.')[-2] + "_.c", 'r') as f:
+        lines = f.readlines()
+
     for include in includes:
         lines.insert(0, '#include "{}"\n'.format(include))
     # Write source code
     with open(src.split('.')[-2] + "_.c", 'w') as f:
-        f.writelines(lines)
+        for line in lines:
+            f.write(line)
+
     return 0
 
 def generate_header(src: str) -> int:
@@ -63,14 +77,11 @@ def generate_header(src: str) -> int:
     header = src.split('.')[-2] + '_.h'
     # Find functions
     functions = findfunctions(src)
+    # Find libs
     # Open header file
     with open(header, 'w') as f:
         # Write header
         f.write("#define DllExport   __declspec( dllexport )" + '\n')
-        # Write functions
-        for function in functions:
-            f.write(f"DllExport {function.raw};" + '\n')
-    # include header file in source code
     prepend_includes(src, [header.split('/')[-1].split('\\')[-1]])
     return 0
 
